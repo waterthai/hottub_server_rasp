@@ -27,30 +27,35 @@ setting_substance = Setting_substance
 path_file = Path_URL
 setting_dashboard = Setting_dashboard
 
-machine_code = "MA-202306-004"
+machine_code = ""
 path_url = path_file.path_local+"api/Rest_api/get_data_setting"
 while True:
     try:
-        now = datetime.now()
-        dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
-        response = urlopen(path_url)
-        data_json = json.loads(response.read())
-        if int(data_json[0]['online_status']) == 1:
-            print("working online")
-            setting_mode.get_setting(machine_code)
-            setting_ph.get_setting(machine_code)
-            setting_orp.get_setting(machine_code)
-            setting_apf.get_setting(machine_code)
-            setting_chlorine.get_setting(machine_code)
-            setting_filtration.get_setting(machine_code)
-            setting.get_setting(machine_code)
-            setting_besgo.get_setting(machine_code)
-            setting_substance.get_setting(machine_code)
-            setting_dashboard.get_setting(machine_code, dt_string)
-            time.sleep(1)
+        read_machine_code = open("/home/pi/machine_code/machine_code.txt","r")
+        machine_code = read_machine_code.read().rstrip('\n')
+        if machine_code != '':
+            now = datetime.now()
+            dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
+            response = urlopen(path_url)
+            data_json = json.loads(response.read())
+            if int(data_json[0]['online_status']) == 1:
+                print("working online")
+                setting_mode.get_setting(machine_code)
+                setting_ph.get_setting(machine_code)
+                setting_orp.get_setting(machine_code)
+                setting_apf.get_setting(machine_code)
+                setting_chlorine.get_setting(machine_code)
+                setting_filtration.get_setting(machine_code)
+                setting.get_setting(machine_code)
+                setting_besgo.get_setting(machine_code)
+                setting_substance.get_setting(machine_code)
+                setting_dashboard.get_setting(machine_code, dt_string)
+                time.sleep(1)
+            else:
+                print("working offline")
+                time.sleep(3)
         else:
-            print("working offline")
-            time.sleep(3)
+           time.sleep(3)
     except:
         pass
    
